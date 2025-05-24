@@ -788,9 +788,49 @@ But if you write once per minute:
 
 EEPROM lasts years without problems.
 
-🧠 Summary:
-Aspect	Details
-Write endurance	~100,000 cycles per cell
-Cause of wear	Physical degradation of cells
-Effect of overuse	Data corruption, stuck bits
-Mitigation	Minimize writes, wear leveling
+
+
+
+## Topics Covered
+
+### 1. Fuse Bits & AVRDude
+- Fuse bits configure MCU low-level settings like clock source, bootloader enable, brown-out detection.
+- Fuse bits live in non-volatile special memory inside the chip.
+- Changing fuse bits requires a programmer using SPI or high-voltage programming; it cannot be done from running code.
+- `avrdude` is a tool that programs flash and fuse bits via SPI, but manual bit-banging is possible without it.
+- Using a programmer over SPI can erase the bootloader if you write the flash from address 0.
+
+### 2. Clock & Oscillator Pins (XTAL1/XTAL2)
+- MCU needs a clock source (internal or external) for synchronous instruction execution.
+- Crystal oscillator connected to XTAL1 and XTAL2 pins provides a stable 16 MHz clock.
+- Pins can serve multiple functions; MCU uses fuse bits/config registers to define their role.
+
+### 3. Memory Types in Arduino (ATmega328P)
+- Flash memory: stores program code (non-volatile).
+- EEPROM: small non-volatile storage for user data/config.
+- SRAM: volatile runtime memory for variables.
+
+### 4. SPI Interface
+- SPI is a synchronous serial communication protocol using MOSI, MISO, SCK, and SS pins.
+- Used for programming MCU via ISP and communicating with peripherals.
+
+### 5. Brown-Out Detection (BOD)
+- Monitors supply voltage.
+- Resets MCU if voltage falls below threshold to prevent erratic behavior.
+
+### 6. Watchdog Timer (WDT)
+- Hardware timer that resets MCU if software hangs by failing to reset the watchdog timer in time.
+
+### 7. EEPROM Usage & Limits
+- EEPROM stores persistent data but has limited write cycles (~100,000).
+- Excessive writes degrade cells causing data corruption.
+- Use wear leveling and minimize writes to extend EEPROM life.
+
+### 8. Programming Without Bootloader
+- Programming flash and fuse bits directly with a programmer erases the bootloader.
+- USB serial uploading won’t work unless the bootloader is re-burned.
+
+---
+
+Let me know when you want the next summary or more detailed explanations.
+
